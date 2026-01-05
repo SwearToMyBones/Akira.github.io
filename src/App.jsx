@@ -206,9 +206,9 @@ export default function App() {
 
   // 🎵 歌单
   const playlist = [
-    { title: "Idle and the Real", src: "/Idle and the Real-小西利树.mp3" },
-    { title: "Life Will Change", src: "/life goes on-目黑将司.mp3" }, // 示例，请确认文件名
-    { title: "Beneath the Mask", src: "/Lyn - Beneath the Mask -rain-.mp3" }, 
+    { title: "Idle and the Real", src: "Idle and the Real-小西利树.mp3" },
+    { title: "Life Will Change", src: "life goes on-目黑将司.mp3" }, // 示例，请确认文件名
+    { title: "Beneath the Mask", src: "Lyn - Beneath the Mask -rain-.mp3" }, 
   ];
 
   const playNext = () => {
