@@ -1,0 +1,155 @@
+/* 1. 引入字体：JetBrains Mono (代码体) 和 Montserrat (标题体) */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Montserrat:wght@400;600;800&display=swap');
+
+/* 2. 初始化 Tailwind CSS (必须保留这三行) */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. 定义全局变量 (方便做日夜切换) */
+:root {
+  --bg-color: #E5E5E5;
+  --text-color: #1A1A1A;
+}
+
+.dark {
+  --bg-color: #0F0F0F;
+  --text-color: #E5E5E5;
+}
+
+/* 4. 基础样式设定 */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Montserrat', sans-serif; /* 默认使用无衬线字体 */
+  overflow: hidden; /* 隐藏浏览器默认滚动条，打造 App 质感 */
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 自定义滚动条样式 (更符合工业风) */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #FFC107; /* 终末地黄 */
+}
+
+/* 装饰性网格背景 */
+.bg-grid {
+  background-size: 40px 40px;
+  mask-image: linear-gradient(to bottom, transparent, black, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 40%, black 70%, transparent 95%);
+  opacity: 0.1;
+}
+
+/* 故障文字效果 (鼠标悬停时的特效) */
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: #FFC107;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 2px) }
+  40% { transform: translate(-2px, -2px) }
+  60% { transform: translate(2px, 2px) }
+  80% { transform: translate(2px, -2px) }
+  100% { transform: translate(0) }
+}
+
+/* --- Endfield 风格音量滑块 --- */
+
+/* 去掉默认样式 */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+/* 滑轨背景 */
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background: #333;
+  border: 1px solid #555;
+}
+
+/* 滑块头 (变成方块) */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 12px;
+  width: 6px; /* 长方形滑块 */
+  background: #FFC107; /* 黄色 */
+  margin-top: -5px; /* 对齐轨道中心 */
+  cursor: pointer;
+  box-shadow: 0 0 5px rgba(255, 193, 7, 0.5); /* 发光效果 */
+  transition: background 0.2s, transform 0.2s;
+}
+
+/* 鼠标悬停时滑块变白，更有交互感 */
+input[type="range"]:hover::-webkit-slider-thumb {
+  background: #FFFFFF;
+  transform: scaleY(1.2);
+}
+
+
+/* --- 新增材质纹理 --- */
+
+/* 1. 工业噪点纹理 (给画面增加颗粒感，避免过于光滑) */
+.bg-noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999; /* 确保在最上层 */
+  opacity: 0.04; /* 非常微弱，仅提供质感 */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* 2. 等距工业网格背景 (替代单一纯色背景) */
+.bg-isometric-grid {
+  background-image: 
+    linear-gradient(30deg, #444444 1px, transparent 1px),
+    linear-gradient(150deg, #444444 1px, transparent 1px);
+  background-size: 40px 23px; /* 调整网格大小 */
+  /* 白天模式下的网格颜色更淡 */
+}
+
+.light .bg-isometric-grid {
+    background-image: 
+    linear-gradient(30deg, #cccccc 1px, transparent 1px),
+    linear-gradient(150deg, #cccccc 1px, transparent 1px);
+}
+
+/* 3. 扫描线动画 (增加动态感) */
+.scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 193, 7, 0.2); /* 淡淡的黄色 */
+    opacity: 0.5;
+    animation: scan 8s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes scan {
+    0% { transform: translateY(-100vh); }
+    100% { transform: translateY(200vh); }
+}
+
+/* 让白天模式下的文字更黑，对比度更高，模仿印刷风格 */
+.light body {
+    color: #050505;
+}
+
+/* 增加卡片的立体感阴影 */
+.shadow-hard {
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
+}
