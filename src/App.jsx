@@ -1,15 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 // 1. 在这里引入了 Github 图标
-import { Sun, Moon, Volume2, VolumeX, Globe, Terminal, Briefcase, FileText, MessageSquare, SkipBack, SkipForward, Github } from 'lucide-react';
+import { Sun, Moon, Volume2, VolumeX, Globe, Terminal, LayoutDashboard, Briefcase, FileText, MessageSquare, SkipBack, SkipForward, Github, ChevronLeft, ChevronRight, ChevronDown, BookHeart,Coffee, Command, ExternalLink} from 'lucide-react';
 import myAvatar from './assets/lxx.jpg'; // 根据实际路径调整
 
+import background1 from './assets/project-covers/1-cover.jpg';
+import background2 from './assets/project-covers/2-cover.jpg';
+import background3 from './assets/project-covers/3-cover.jpg';
+import background4 from './assets/project-covers/4-cover.jpg';
+import background5 from './assets/project-covers/5-cover.jpg';
+import background6 from './assets/project-covers/6-cover.jpg';
+
+import { wikiData } from './learningData'; // <--- 新增学习内容总结
+
 // --- 2. 自定义社交图标组件 (新增部分) ---
+
 const BilibiliIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
-    <path d="M17.813 4.653h.854c1.51.054 2.769 1.313 2.823 2.823v11.936c-.054 1.51-1.313 2.769-2.823 2.823H5.334c-1.51-.054-2.769-1.313-2.823-2.823V7.476c.054-1.51 1.313-2.769 2.823-2.823h.854l-2.008-2.678.895-.672 2.378 3.17h8.1l2.378-3.17.895.672-2.013 2.678zM5.962 10.973v4.472h1.677v-4.472H5.962zm10.395 0v4.472h1.677v-4.472h-1.677z"/>
+    <path 
+      fillRule="evenodd" 
+      clipRule="evenodd" 
+      d="M17.813 4.653h.854c1.51.054 2.769 1.313 2.823 2.823v11.936c-.054 1.51-1.313 2.769-2.823 2.823H5.334c-1.51-.054-2.769-1.313-2.823-2.823V7.476c.054-1.51 1.313-2.769 2.823-2.823h.854l-2.008-2.678.895-.672 2.378 3.17h8.1l2.378-3.17.895.672-2.013 2.678zM5.6 10.973v4.472h2.4v-4.472H5.6zm10.4 0v4.472h2.4v-4.472H16z"
+    />
   </svg>
 );
+
+// ... 其他代码 ...
 
 const XHSIcon = ({ className }) => (
   <svg viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
@@ -141,7 +157,7 @@ const Dashboard = ({ lang, theme }) => (
                     {/* 小红书 */}
                     <a href="https://www.xiaohongshu.com/user/profile/63200e500000000023024f15" target="_blank" rel="noopener noreferrer"
                        className={`transition-transform hover:scale-110 hover:text-end-yellow duration-300 ${theme === 'light' ? 'text-gray-400' : 'text-gray-500'}`}>
-                        <XHSIcon className="w-6 h-6" />
+                        <BookHeart className="w-6 h-6" />
                     </a>
                 </div>
 
@@ -169,28 +185,296 @@ const Dashboard = ({ lang, theme }) => (
   </div>
 );
 
-const Projects = () => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 overflow-y-auto h-[70vh] p-2 pr-4 custom-scrollbar">
-    {[1, 2, 3, 4, 5].map((item) => (
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: item * 0.1 }}
-        key={item} 
-        className="group relative bg-white/5 border border-gray-600 hover:border-end-yellow transition-all cursor-pointer p-6 flex flex-col justify-between hover:bg-white/10"
+const projectDocs = [
+  {
+    id: 'UE5_GAS学习',
+    title: 'DOC_01',
+    description: '个人关于GAS学习文档总结.',
+    image: background1,
+    link: 'https://bcnqk7n0fhvi.feishu.cn/wiki/Z0yzwHzqhiBILJk7DsocEENknqe',
+    tags: ['Project', 'UE5', 'GAS'],
+  },
+  {
+    id: 'UE5背包系统学习',
+    title: 'DOC_02',
+    description: '个人关于背包系统学习文档总结.',
+    image: background2,
+    link: 'https://bcnqk7n0fhvi.feishu.cn/wiki/HIr7wGWeIim2YgkV33FcjNsEnIe',
+    tags: ['Notes', 'Review', 'Archive'],
+  },
+  {
+    id: '洗牌算法',
+    title: 'DOC_03',
+    description: '关于洗牌算法的总结.',
+    image: background3,
+    link: 'https://bcnqk7n0fhvi.feishu.cn/wiki/D9hBw56Pjioc4ukcU7Mco7eHnrc',
+    tags: ['Project', 'Public Link', 'Read'],
+  },
+  {
+    id: '第三人称锁定',
+    title: 'DOC_04',
+    description: '第三人称模式战斗锁定敌人机制分析.',
+    image: background4,
+    link: 'https://bcnqk7n0fhvi.feishu.cn/wiki/Jf65wtlGsiRIKukPtjGcIxOenGb',
+    tags: ['Draft', 'Feishu', 'Soon'],
+  },
+  {
+    id: 'U3D玩法研究',
+    title: 'DOC_05',
+    description: 'Unity中3D和2D场景下的切换.',
+    image: background5,
+    link: 'https://bcnqk7n0fhvi.feishu.cn/wiki/CxApwr0A4iNVaAkxJqccplOInQc',
+    tags: ['Draft', 'Archive', 'Soon'],
+  },
+  {
+    id: 'placeholder-06',
+    title: 'DOC_06',
+    description: 'Reserved slot for notes, reviews, or learning logs.',
+    image: background6,
+    link: '#',
+    tags: ['Draft', 'Notes', 'Soon'],
+  },
+];
+
+const Projects = () => {
+  const scrollerRef = useRef(null);
+
+  const scrollProjects = (direction) => {
+    if (!scrollerRef.current) return;
+    const firstCard = scrollerRef.current.querySelector('a');
+    const gap = 16;
+    const distance = firstCard ? firstCard.offsetWidth + gap : scrollerRef.current.clientWidth;
+
+    scrollerRef.current.scrollBy({
+      left: direction * distance,
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <div className="relative h-[70vh]">
+      <button
+        type="button"
+        onClick={() => scrollProjects(-1)}
+        className="absolute left-0 top-1/2 z-20 hidden h-12 w-10 -translate-y-1/2 items-center justify-center border border-end-yellow/70 bg-black/70 text-end-yellow backdrop-blur-md transition-all hover:bg-end-yellow hover:text-black md:flex"
+        aria-label="Previous projects"
       >
-        <div className="absolute top-0 right-0 p-1 bg-end-yellow text-black font-mono text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">OPEN</div>
-        <div>
-           <h3 className="font-bold text-xl mb-2 group-hover:text-end-yellow transition-colors">PROJECT_0{item}</h3>
-           <p className="text-xs font-mono opacity-60">React / Tailwind / Three.js</p>
+        <ChevronLeft size={22} />
+      </button>
+
+      <div
+        ref={scrollerRef}
+        className="flex h-full gap-4 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory p-2 md:px-12 custom-scrollbar"
+      >
+        {projectDocs.map((project, index) => (
+          <motion.a
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.08 }}
+            key={project.id}
+            href={project.link}
+            target={project.link === '#' ? undefined : '_blank'}
+            rel={project.link === '#' ? undefined : 'noopener noreferrer'}
+            className="group relative flex min-h-[520px] w-full flex-shrink-0 snap-start cursor-pointer flex-col overflow-hidden border border-gray-600 bg-white/5 transition-all hover:border-end-yellow hover:bg-white/10 md:w-[calc((100%-1rem)/2)] xl:w-[calc((100%-2rem)/3)] [content-visibility:auto] [contain-intrinsic-size:520px_360px]"
+          >
+            <div className="relative aspect-[1/1] w-full overflow-hidden bg-black/30">
+              <img
+                src={project.image}
+                alt={project.title}
+                loading={index < 3 ? 'eager' : 'lazy'}
+                decoding="async"
+                draggable="false"
+                className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-[1.03]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+              <div className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center border border-end-yellow bg-black/70 text-end-yellow">
+                <ExternalLink size={16} />
+              </div>
+            </div>
+
+            <div className="flex flex-1 flex-col p-5">
+              <div className="mb-3 flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <span key={tag} className="border border-end-yellow/40 px-2 py-0.5 text-[10px] font-mono text-end-yellow">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <h3 className="font-mono text-xl font-bold mb-2 group-hover:text-end-yellow transition-colors">
+                {project.title}
+              </h3>
+              <p className="text-sm leading-relaxed opacity-70">
+                {project.description}
+              </p>
+
+              <div className="mt-auto pt-6">
+                <div className="flex items-center justify-between text-[10px] font-mono opacity-60">
+                  <span>{project.link === '#' ? 'DOCUMENT_SLOT_RESERVED' : 'OPEN_FEISHU_DOCUMENT'}</span>
+                  <span>DOC_{String(index + 1).padStart(2, '0')}</span>
+                </div>
+                <div className="mt-2 h-1 w-full bg-gray-700">
+                  <div className="h-full w-2/3 bg-end-yellow transition-all duration-500 group-hover:w-full"></div>
+                </div>
+              </div>
+            </div>
+          </motion.a>
+        ))}
+      </div>
+
+      <button
+        type="button"
+        onClick={() => scrollProjects(1)}
+        className="absolute right-0 top-1/2 z-20 hidden h-12 w-10 -translate-y-1/2 items-center justify-center border border-end-yellow/70 bg-black/70 text-end-yellow backdrop-blur-md transition-all hover:bg-end-yellow hover:text-black md:flex"
+        aria-label="Next projects"
+      >
+        <ChevronRight size={22} />
+      </button>
+    </div>
+  );
+};
+
+// src/App.jsx
+
+// --- 修改后的 Notes 组件：带右侧目录 ---
+const Notes = ({ theme }) => {
+  const [activeDoc, setActiveDoc] = useState(wikiData[0].items[0]);
+  
+  // 展开/收起状态
+  const [openCategories, setOpenCategories] = useState(
+    new Array(wikiData.length).fill(true)
+  );
+
+  const toggleCategory = (index) => {
+    const newState = [...openCategories];
+    newState[index] = !newState[index];
+    setOpenCategories(newState);
+  };
+
+  // 👇 跳转功能的实现
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      // smooth 滚动到对应位置
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  return (
+    <div className="flex h-full w-full overflow-hidden">
+      
+      {/* 1. 左侧：侧边栏导航 (保持不变，宽度稍作调整) */}
+      <div className={`w-64 h-full overflow-y-auto border-r custom-scrollbar pr-2 flex-shrink-0
+        ${theme === 'light' ? 'border-gray-300' : 'border-gray-700'}`}>
+        
+        {wikiData.map((cat, index) => (
+          <div key={index} className="mb-4">
+            <button 
+              onClick={() => toggleCategory(index)}
+              className={`flex items-center w-full text-left mb-3 select-none group transition-all
+                ${theme === 'light' ? 'text-gray-800' : 'text-gray-200'}
+              `}
+            >
+              <span className={`mr-2 transition-transform duration-200 ${openCategories[index] ? 'rotate-90' : 'rotate-0'} opacity-40`}>
+                <ChevronRight size={16} />
+              </span>
+              <div className="flex items-baseline gap-3 group-hover:translate-x-1 transition-transform duration-300">
+                <span className="font-mono text-xs text-end-yellow font-bold opacity-60">
+                  {(index + 1).toString().padStart(2, '0')}
+                </span>
+                <span className="font-bold text-base tracking-wider uppercase font-mono">
+                  {cat.category}
+                </span>
+              </div>
+            </button>
+
+            <AnimatePresence initial={false}>
+              {openCategories[index] && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className={`space-y-0.5 ml-2 pl-2 border-l ${theme === 'light' ? 'border-gray-300' : 'border-gray-800'}`}>
+                    {cat.items.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => setActiveDoc(item)}
+                        className={`w-full text-left px-4 py-1.5 text-sm font-mono transition-all border-l-2 truncate
+                          ${activeDoc.id === item.id 
+                            ? 'border-end-yellow text-end-yellow bg-end-yellow/10' 
+                            : 'border-transparent opacity-60 hover:opacity-100 hover:bg-white/5'
+                          }`}
+                      >
+                        {item.title}
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+
+      {/* 2. 中间：阅读区域 + 3. 右侧：目录区域 (Flex布局) */}
+      <div className="flex-1 flex overflow-hidden">
+        
+        {/* 中间：文章内容 (flex-1 占满剩余空间) */}
+        <div className="flex-1 h-full overflow-y-auto custom-scrollbar p-6 scroll-smooth">
+          <AnimatePresence mode='wait'>
+            <motion.div
+              key={activeDoc.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="prose prose-invert max-w-4xl" // 限制最大宽度，防止太宽难读
+            >
+              {activeDoc.content}
+              
+              <div className="w-full h-px bg-gray-700 mt-12 mb-4"></div>
+              <div className="text-[10px] font-mono opacity-40">END OF DOCUMENT // ID: {activeDoc.id.toUpperCase()}</div>
+            </motion.div>
+          </AnimatePresence>
         </div>
-        <div className="w-full bg-gray-700 h-1 mt-6">
-          <div className="bg-end-yellow h-full transition-all duration-1000 ease-out" style={{ width: `${Math.random() * 60 + 40}%` }}></div>
-        </div>
-      </motion.div>
-    ))}
-  </div>
-);
+
+        {/* 3. 右侧：目录 (TOC) - 仅在有目录数据时显示 */}
+        {activeDoc.toc && activeDoc.toc.length > 0 && (
+          <div className={`w-48 hidden xl:block h-full overflow-y-auto p-6 border-l
+            ${theme === 'light' ? 'border-gray-300 bg-gray-50/50' : 'border-gray-800 bg-black/20'}`}>
+            
+            <div className="text-xs font-mono font-bold text-end-yellow mb-4 tracking-widest opacity-80">
+              // CATALOG
+            </div>
+            
+            <div className="space-y-2 relative">
+              {/* 装饰线 */}
+              <div className="absolute left-0 top-2 bottom-2 w-px bg-gray-700/30"></div>
+
+              {activeDoc.toc.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollToSection(link.id)}
+                  className={`block w-full text-left text-xs font-mono py-1 pl-3 border-l-2 border-transparent transition-all
+                    ${theme === 'light' 
+                      ? 'text-gray-500 hover:text-black hover:border-gray-400' 
+                      : 'text-gray-500 hover:text-white hover:border-end-yellow'
+                    }`}
+                >
+                  {link.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        
+      </div>
+    </div>
+  );
+};
 
 // --- 主应用组件 ---
 export default function App() {
@@ -242,7 +526,7 @@ export default function App() {
   }, []);
 
   const menuItems = [
-    { id: 'home', icon: <Terminal size={18} />, label: i18n[lang].nav.home },
+    { id: 'home', icon: <LayoutDashboard size={18} />, label: i18n[lang].nav.home },
     { id: 'notes', icon: <FileText size={18} />, label: i18n[lang].nav.notes },
     { id: 'projects', icon: <Briefcase size={18} />, label: i18n[lang].nav.projects },
     { id: 'guestbook', icon: <MessageSquare size={18} />, label: i18n[lang].nav.board },
@@ -256,11 +540,13 @@ export default function App() {
       {/* 1. 基础底色 (Day Mode 使用纯净的浅灰，避免过白刺眼) */}
       <div className={`fixed inset-0 z-[-2] transition-colors duration-500 ${theme === 'light' ? 'bg-[#F0F0F0]' : 'bg-[#0F0F0F]'}`}></div>
 
-      {/* 2. 装饰性巨型文字水印 (Day Mode 下特别明显，增加层次) */}
+      {/* 2. 装饰性巨型文字水印 (Day Mode 下特别明显，增加层次)
+      
       <div className={`fixed top-[-5%] left-[-5%] text-[20vw] font-black leading-none select-none z-[-1] transition-opacity duration-500 overflow-hidden whitespace-nowrap pointer-events-none
           ${theme === 'light' ? 'text-gray-300 opacity-80' : 'text-[#1a1a1a] opacity-50'}`}>
           ENDFIELD
       </div>
+       */}
 
       {/* 3. 右侧黄色装饰色块 (模仿参考图的侧边栏设计) */}
       <div className={`fixed top-0 bottom-0 right-[15%] w-[1px] z-[-1] transition-colors duration-500 ${theme === 'light' ? 'bg-gray-300' : 'bg-gray-800'}`}></div>
@@ -288,7 +574,9 @@ export default function App() {
       <header className={`h-16 border-b flex justify-between items-center px-6 z-20 backdrop-blur-md transition-colors duration-500
         ${theme === 'light' ? 'bg-white/40 border-gray-300' : 'bg-black/40 border-gray-700/50'}`}>
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 bg-end-yellow flex items-center justify-center font-black text-black select-none">Man</div>
+         <div className="w-10 h-10 border-2 border-end-yellow text-end-yellow flex items-center justify-center bg-black/50 backdrop-blur-sm">
+        <Coffee size={24} strokeWidth={2.5} />
+        </div>
           <span className="font-mono text-sm tracking-widest hidden md:inline opacity-80">卢布朗咖啡店 // 个人博客</span>
         </div>
 
@@ -402,12 +690,10 @@ export default function App() {
             >
               {activeTab === 'home' && <Dashboard lang={lang} theme={theme} />}
               {activeTab === 'projects' && <Projects />}
-              {activeTab === 'notes' && (
-                <div className="flex items-center justify-center h-full text-end-gray font-mono flex-col gap-4">
-                   <div className="text-6xl opacity-20">404</div>
-                   <div>// DATA ARCHIVE LOCKED</div>
-                </div>
-              )}
+              
+              {activeTab === 'notes' && <Notes theme={theme} />}
+
+
                {activeTab === 'guestbook' && (
                 <div className="flex flex-col gap-6 max-w-lg mt-10 ml-4">
                   <h3 className="font-mono text-end-yellow text-xl">> TRANSMIT_MESSAGE</h3>
