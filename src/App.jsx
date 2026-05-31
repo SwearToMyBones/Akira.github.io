@@ -485,8 +485,11 @@ export default function App() {
 
   const [volume, setVolume] = useState(0.3)
   const [audioPlaying, setAudioPlaying] = useState(false);
-  const [currentSongIndex, setCurrentSongIndex] = useState(0); 
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const audioRef = useRef(null);
+  const titleRef = useRef(null);
+  const titleContainerRef = useRef(null);
+  const [titleOverflow, setTitleOverflow] = useState(false);
 
   // 🎵 歌单
   const playlist = [
@@ -514,6 +517,38 @@ export default function App() {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
+  // 进入网页自动播放
+  useEffect(() => {
+    const tryAutoPlay = () => {
+      if (audioRef.current) {
+        audioRef.current.volume = volume;
+        audioRef.current.play().then(() => {
+          setAudioPlaying(true);
+        }).catch(() => {
+          // 浏览器拦截自动播放，等待用户首次交互
+          const resume = () => {
+            audioRef.current.play().then(() => setAudioPlaying(true));
+            document.removeEventListener('click', resume);
+            document.removeEventListener('keydown', resume);
+          };
+          document.addEventListener('click', resume, { once: true });
+          document.addEventListener('keydown', resume, { once: true });
+        });
+      }
+    };
+    // 延迟一小段时间确保 DOM 就绪
+    const t = setTimeout(tryAutoPlay, 300);
+    return () => clearTimeout(t);
+  }, []);
+
+  // 检测歌名是否溢出，决定是否启用滚动动画
+  useEffect(() => {
+    if (titleRef.current && titleContainerRef.current) {
+      const overflow = titleRef.current.scrollWidth > titleContainerRef.current.clientWidth;
+      setTitleOverflow(overflow);
+    }
+  }, [currentSongIndex, audioPlaying]);
 
   useEffect(() => {
     if (theme === 'dark') document.documentElement.classList.add('dark');
@@ -605,8 +640,13 @@ export default function App() {
               <button onClick={playNext} className="hover:text-end-yellow transition-colors opacity-50 hover:opacity-100"><SkipForward size={14} /></button>
             </div>
 
-            <div className="w-24 overflow-hidden hidden lg:block">
-               <div className="text-[10px] font-mono text-end-yellow whitespace-nowrap">
+            <div ref={titleContainerRef} className="w-24 overflow-hidden hidden lg:block">
+               <div ref={titleRef}
+                 className={`text-[10px] font-mono text-end-yellow whitespace-nowrap inline-block ${titleOverflow ? 'animate-marquee' : ''}`}
+                 style={titleOverflow ? {
+                   '--scroll-distance': `calc(-100% + 6rem - 8px)`,
+                   '--marquee-duration': `${Math.max(playlist[currentSongIndex].title.length * 0.35, 4)}s`,
+                 } : {}}>
                  {audioPlaying ? `>> PLAYING: ${playlist[currentSongIndex].title}` : ">> PAUSED"}
                </div>
             </div>
@@ -709,7 +749,7 @@ export default function App() {
         </section>
       </main>
 
-      <audio ref={audioRef} src={playlist[currentSongIndex].src} onEnded={playNext} />
+      <audio ref={audioRef} src={playlist[currentSongIndex].src} onEnded={playNext} autoPlay preload="auto" />
     </div>
   );
 }
