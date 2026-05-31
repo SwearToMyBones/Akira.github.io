@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 // 1. 在这里引入了 Github 图标
-import { Sun, Moon, Volume2, VolumeX, Globe, Terminal, LayoutDashboard, Briefcase, FileText, MessageSquare, SkipBack, SkipForward, Github, ChevronLeft, ChevronRight, ChevronDown, BookHeart,Coffee, Command, ExternalLink} from 'lucide-react';
+import { Sun, Moon, Volume2, VolumeX, Globe, Terminal, LayoutDashboard, Briefcase, FileText, MessageSquare, SkipBack, SkipForward, Github, ChevronLeft, ChevronRight, ChevronDown, BookHeart, Command, ExternalLink} from 'lucide-react';
 import myAvatar from './assets/lxx.jpg'; // 根据实际路径调整
 
 import background1 from './assets/project-covers/1-cover.jpg';
@@ -606,13 +606,22 @@ export default function App() {
       {/* --- 👆 背景层重构 END 👆 --- */}
 
       {/* 顶部 HUD 栏 */}
-      <header className={`h-16 border-b flex justify-between items-center px-6 z-20 backdrop-blur-md transition-colors duration-500
-        ${theme === 'light' ? 'bg-white/40 border-gray-300' : 'bg-black/40 border-gray-700/50'}`}>
+      <header className={`h-16 flex justify-between items-center px-6 z-20 backdrop-blur-md transition-colors duration-500 relative
+        ${theme === 'light'
+          ? 'bg-gradient-to-b from-white/60 via-white/30 to-white/10 border-gray-300/50'
+          : 'bg-gradient-to-b from-black/60 via-black/30 to-black/5 border-gray-700/30'}`
+        }>
+        {/* 顶部渐变发光条 */}
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-end-yellow/50 to-transparent"></div>
+        {/* 底部渐变边线 */}
+        <div className={`absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-end-yellow/30 to-transparent ${theme === 'light' ? 'opacity-60' : 'opacity-100'}`}></div>
+        {/* 底部发光扩散 */}
+        <div className="absolute bottom-0 left-1/4 right-1/4 h-[2px] bg-end-yellow/20 blur-sm"></div>
+
         <div className="flex items-center gap-4">
-         <div className="w-10 h-10 border-2 border-end-yellow text-end-yellow flex items-center justify-center bg-black/50 backdrop-blur-sm">
-        <Coffee size={24} strokeWidth={2.5} />
-        </div>
-          <span className="font-mono text-sm tracking-widest hidden md:inline opacity-80">卢布朗咖啡店 // 个人博客</span>
+          <span className={`font-mono text-sm tracking-widest hidden md:inline transition-colors duration-500 ${theme === 'light' ? 'text-gray-700' : 'text-gray-300'}`}>
+            <span className="text-end-yellow">//</span> 卢布朗咖啡店 <span className="text-end-yellow">//</span> 个人博客
+          </span>
         </div>
 
         <div className={`hidden md:flex gap-1 opacity-50 ${theme === 'light' ? 'text-black' : 'text-white'}`}>
